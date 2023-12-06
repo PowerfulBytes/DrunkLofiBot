@@ -16,7 +16,7 @@ token = config["DISCORD_TOKEN"]
 SONGS = {}
 
 # Read the data from output.txt
-with open("output.txt", "r", encoding="utf-8") as f:
+with open("24_7 Lofi", "r", encoding="utf-8") as f:
     for line in f:
         # Split the line into a title and a URL
         title, url = line.strip().split(": ", 1)
