@@ -1,13 +1,35 @@
-# DrunkLofiBot
+# Drunk Lofi Discord Music Bot
 
-"DrunkLofiBot.py is a Discord bot script that plays lo-fi music in a Discord server. The bot uses the discord.py library to interact with Discord's API and the yt_dlp library to download and play audio from YouTube.
+This is a simple Discord bot that can play music from YouTube in a voice channel. It uses the [yt-dlp](https://github.com/yt-dlp/yt-dlp) library to download and stream audio from YouTube videos. It also reads a list of songs from a text file and allows the user to choose one of them.
 
-The bot maintains a dictionary of song titles and URLs, which it updates by running a separate script, YTScraper.py. The bot reads the updated song data from an output.txt file and stores it in the dictionary for easy access.
+## Requirements
 
-The bot includes a custom audio player class, YTDLSource, which uses discord.py's PCM volume transformer to control the volume of the played audio. The class includes a method to download and play audio from a YouTube URL.
+To run this bot, you will need:
 
-The bot supports commands to play and stop songs. The 'play' command includes an autocomplete feature that suggests song titles based on the user's input. The bot can connect to a voice channel that the user is in and play a song from the dictionary. If the bot is already connected to a voice channel, it disconnects before connecting to a new one.
+- Python 3.8 or higher
+- discord.py 1.7.3 or higher
+- yt-dlp 2021.10.22 or higher
+- A Discord bot token
+- A text file named output.txt with song titles and URLs in the format: `title: url`
 
-The bot also includes a 'stop' command that stops the current song and disconnects the bot from the voice channel.
+## Usage
 
-The bot uses a command prefix and has all intents enabled. It syncs its commands with Discord when it establishes a connection. The bot is started using a bot token."
+To use this bot, follow these steps:
+
+- Install the required libraries using `pip install -r requirements.txt`
+- Create a file named `DISCORD_TOKEN.env` and write your bot token in it as `DISCORD_TOKEN=your_token`
+- Invite the bot to your server using the OAuth2 URL generator
+- Run the bot using `DrunkLofiBot.py`
+- In a voice channel, type `/play` to see the list of songs available
+- Enjoy the music!
+
+## Commands
+
+The bot has the following commands:
+
+- `/play`: Shows the list of songs available and prompts the user to choose one
+- `/stop`: Stops the current song and disconnects the bot from the voice channel
+
+## License
+
+This project is licensed under a Custom License. See the LICENSE file for details.
