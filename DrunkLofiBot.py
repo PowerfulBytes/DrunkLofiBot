@@ -1,38 +1,19 @@
 # Import necessary modules
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 from discord import app_commands
 from youtube_dl.utils import DownloadError
 import yt_dlp
 import asyncio
-import os
 import typing
+from dotenv import dotenv_values
+
+# Load the environment variables from the .env file
+config = dotenv_values("DISCORD_TOKEN.env")
+token = config["DISCORD_TOKEN"]
 
 # Define an empty dictionary for the songs
 SONGS = {}
-
-# Define a command for the bot to update the list of all available songs
-@tasks.loop(hours=24)
-async def update_songs():
-    # Run the YTScraper.py script
-    os.system("python YTScraper.py")
-
-    # Clear the SONGS dictionary
-    SONGS.clear()
-
-    # Read the updated data from output.txt
-    with open("output.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            # Split the line into a title and a URL
-            title, url = line.strip().split(": ", 1)
-            # Add the title and URL to the SONGS dictionary
-            SONGS[title] = url
-
-# This event is triggered before the update_songs task starts
-@update_songs.before_loop
-async def before_update_songs():
-    await bot.wait_until_ready()  # wait until the bot logs in
-    await update_songs()  # run the task once immediately
 
 # Read the data from output.txt
 with open("output.txt", "r", encoding="utf-8") as f:
@@ -70,6 +51,16 @@ bot = commands.Bot(command_prefix="!",
 # Define a command for the bot to play a song
 @bot.tree.command(name="play")
 async def play(interaction: discord.Interaction, song: str):
+    """
+    Play a song in the voice channel.
+
+    Parameters:
+    - interaction (discord.Interaction): The interaction object representing the user's command.
+    - song (str): The name of the song to be played.
+
+    Returns:
+    None
+    """
     # Get the URL of the song from the SONGS dictionary
     url = SONGS[song]
     # Get the voice channel that the user is in
@@ -94,6 +85,16 @@ async def play(interaction: discord.Interaction, song: str):
 # Define an autocomplete function for the 'song' option of the 'play' command
 @play.autocomplete("song")
 async def play_autocomplete(interaction: discord.Interaction, current: str) -> typing.List[app_commands.Choice[str]]:
+    """
+    Autocomplete function for the 'song' option of the 'play' command.
+
+    Parameters:
+    - interaction (discord.Interaction): The interaction object representing the user's command.
+    - current (str): The current input value for the 'song' option.
+
+    Returns:
+    typing.List[app_commands.Choice[str]]: The autocomplete choices for the 'song' option.
+    """
     # Initialize an empty list for the data
     data = []
 
@@ -112,6 +113,15 @@ async def play_autocomplete(interaction: discord.Interaction, current: str) -> t
 # Define a command for the bot to stop playing a song
 @bot.tree.command(name="stop")
 async def stop(interaction: discord.Interaction):
+    """
+    Stop playing the current song.
+
+    Parameters:
+    - interaction (discord.Interaction): The interaction object representing the user's command.
+
+    Returns:
+    None
+    """
     # Get the voice client for the current guild
     voice_client = interaction.guild.voice_client
     # If the voice client is playing a song, stop it and send a message to inform the user
@@ -124,8 +134,12 @@ async def stop(interaction: discord.Interaction):
 # This event is triggered when the bot has established a connection with Discord
 @bot.event
 async def on_ready():
-    # Updates the Lofi Songs list once a day
-    update_songs.start()
+    """
+    Event handler for when the bot is ready.
+
+    Returns:
+    None
+    """
     # Print a message to the console to indicate that the bot is ready
     print("Bot is Up and Ready!")
     try:
@@ -138,4 +152,5 @@ async def on_ready():
         print(f"Error syncing commands: {e}")
 
 # Start the bot using your bot token
-bot.run('MTE4MTExNzk1Mjk1NTc4MTIwMA.GJ-Tol.rBSu8cCZe2wDoRAYyL-PWWl22wA6v05eVvjwME')
+bot.run(token)
+
