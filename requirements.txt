@@ -2,3 +2,5 @@ discord
 discord-py-interactions
 yt-dlp
 python-dotenv
+pynacl
+ffmpeg
